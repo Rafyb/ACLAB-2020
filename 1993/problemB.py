@@ -213,8 +213,9 @@ def return_lot(graph,A,B):
     chemin,precedent = dijkstra(newGraph.matrice,A)
     res,res_chemin= get_chemin(newGraph,A,B,chemin,precedent)
     
-   newGraph.matrice[A][B] = lenAB
+    newGraph.matrice[A][B] = lenAB
     newGraph.matrice[B][A] = lenAB
+    res +=lenAB
     return  res,res_chemin   
 
 
@@ -242,8 +243,13 @@ def enlever_doublons(lots):
                 r.append(j)
 
     r= list(dict.fromkeys(r))
-    for i in range(len(r)):
-        del lots[len(r)-i]
+    i=len(r)-1
+    print(len(lots))
+    while (i>=0):
+        print(r[i])
+        print(str(r[i])+" "+str(lots[r[i]]))
+        del lots[r[i]]
+        i-=1
     return lots
             
 def analiser_tout_voisins(graph,A):
@@ -251,18 +257,25 @@ def analiser_tout_voisins(graph,A):
     for i in range(graph.size):
         if (graph.matrice[A][i]!=INF):
             lots_A.append(return_lot(graph,A,i))
-    return lots_A
+    return enlever_doublons(lots_A)
 
 def analiser_la_figure(graph):
     lots_all=[]
     for i in range(graph.size):
         lots_all=lots_all+(analiser_tout_voisins(graph,i))
-    enlever_doublons(lots_all)
+    
     return lots_all
+
+def nombre_segments(lots_all):
+    new_lots=[]
+    for i in range(len(lots_all)):
+        new_lots.append(len(lots_all[i][1])-1)
+    return new_lots
 
 def main():
     global graph
     global geometrique
+    global lots
     
     geometrique =[]
     read_table(geometrique)
@@ -270,8 +283,10 @@ def main():
     nodes = add_nodes(geometrique[0],Graph)
     graph=Graph(len(nodes),nodes)      
     link_sommet(geometrique[0],graph)
-    graph.rename_ordre()
 
+
+    lots = analiser_la_figure(graph)
+    
     
     
 main()
