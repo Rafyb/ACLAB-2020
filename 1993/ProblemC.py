@@ -2,14 +2,7 @@
 # def __init__
 # string name = nom de la personne
 # Tree parent = de base null, sinon le paren
-
-def define_children(elder,younger,distance):
-            if(distance==1):
-                elder.child.append(younger)
-            else:
-                Tree("",elder)        
-                define_children(elder.child[len(elder.child)-1],younger,distance-1)
-                
+              
 class Tree(object):            
     def __init__(self, name,parent=None,relation=None):
         self.child = []
@@ -21,7 +14,12 @@ class Tree(object):
             else:
                 define_children(parent,self,relation)
     
-
+def define_children(elder,younger,distance):
+            if(distance==1):
+                elder.child.append(younger)
+            else:
+                Tree("",elder)        
+                define_children(elder.child[len(elder.child)-1],younger,distance-1)
 
 
 def print_child(elder):
@@ -54,6 +52,30 @@ def print_tree(tree,relation):
             print("")
         
 
+def comprehend_line(lines):
+    final = lines[1:].split( )
+    final = final[:3]
+    final[2] = int(final[2])
+    return final
+
+def return_descendant(A,B):
+    
+    
+def read_tree():
+    fread = open("input.txt","r")
+    lines=""
+    content=""
+    tree=[]
+    while(content!="E"):
+        lines=fread.readline()
+        content=lines[:1]
+        if(content=="R"):
+            print("R")
+        elif(content=="F"):
+            print("F")
+        elif(content=="#"):
+            print("#")
+
         
 Don= Tree("Don")
 Mary = Tree("Mary",Don)
@@ -68,4 +90,5 @@ define_children(Sue,Jean,1)
 
 print_tree(Don,0)
 print_tree(Sue,0)
+read_tree()
 
