@@ -149,42 +149,51 @@ def link_sommet(matrice,graph):
         graph.matrice[x][y]=w
         graph.matrice[y][x]=w
 
-	    
-def initialiser_pcc(sommet, graph,L,P):
-    L=[INF for i in range(graph.size)]
-    P=[-1 for i in range(graph.size)]
-    L[sommet] = 0.0
-    return L,P
 
-def trouver_min(graph,L):
-    mini = INF
-    sommet = -1
-    for i in range(graph.size):
-        if L[i] <mini:
-            mini=L[i]
-            sommet= i
-    return sommet
+def testinf(chemin, restant):
+    res= restant[0]
+    mini = chemin[restant[0]]
+    for i in restant :
+        if chemin[i]<mini:
+            mini = chemin[i]
+            res=i
+    return (res,mini)
 
-def maj_distance(graph,s1,s2,L,P):
-    if L[s2] > L[s1] + graph.matrice[s1][s2]:
-        L[s2] = L[s1] + graph.matrice[s1][s2]
-        P[s2] = graph.ordre[s1]
-    return L,P
+
+def voisin (i,j,graph):
+    if (graph[i][j]!=INF):
+        return True
+    return False
+
+
+def dijkstra (graph,a):
+    l = len (graph)
+    chemin= [INF for i in range (l)]
+    precedent=[-1 for i in range (l)]
+    restant = [i for i in range (l)]
+    chemin[a]=0
     
-def dijkstra (graph,A,B):
-    mes_longueurs=[]
-    mes_predecesseurs=[]
-    mes_longueurs,mes_predecesseurs = initialiser_pcc(A,graph,mes_longueurs,mes_predecesseurs)
-    G =graph
-    i = A
-    while G.size != 2:
-        i= trouver_min(graph,mes_longueurs)
-        G.remove_sommet(i)
-        for j in range(graph.size):
-            mes_longueurs,mes_predecesseurs = maj_distance(graph,i,j, mes_longueurs,mes_predecesseurs)
-    print(mes_longueurs)
-    print(mes_predecesseurs)
-    return mes_longueurs,mes_predecesseurs
+    while restant != []:
+        mini,dist=testinf(chemin,restant)
+        for i in restant :
+            if voisin(mini,i,graph):
+                if (dist+graph[mini][i]<chemin[i]):
+                    chemin[i]=dist+graph[mini][i]
+                    precedent[i]=mini
+        restant.remove(mini)
+        
+    return chemin,precedent
+
+def get_chemin(graph,a,b,chemin,precedent):
+    longueur=chemin[b]
+    chemin=[]
+    i=precedent[b]
+    chemin.append(b)
+    while (i!=a and i!=-1):
+        chemin.append(i)
+        i=precedent[i]
+    chemin.append(i)
+    return longueur,chemin
     
 
 
@@ -193,29 +202,66 @@ def return_lot(graph,A,B):
     
     #A1 = graph.position_node(A) #position node A
     #B1= graph.position_node(B) #position node B
-    
+    newGraph =None
     newGraph = graph #nouveau graphe que l'on va modifier tel que distance entre A et B =INF
+    
     lenAB = newGraph.matrice[A][B]
+    
     newGraph.matrice[A][B] = INF
-    res,res_chemin= dijkstra(newGraph,A,B)
-    return  res,res_chemin
+    newGraph.matrice[B][A] = INF
+    
+    chemin,precedent = dijkstra(newGraph.matrice,A)
+    res,res_chemin= get_chemin(newGraph,A,B,chemin,precedent)
+    
+   newGraph.matrice[A][B] = lenAB
+    newGraph.matrice[B][A] = lenAB
+    return  res,res_chemin   
 
+
+def is_same(lot_A,lot_B):
+    if len(lot_A)==len(lot_B):
+        common=[]
+        for x in lot_A:
+            if x in lot_B:
+                common.append(x)
+        if len(common)==len(lot_B):
+            return True
+    return False
+
+def enlever_doublons(lots):
+    print("new")
+    lots2= []
+    i=0
+    for i in range(len(lots)):
+        lots2.append(set(lots[i][1]))
+    i=0
+    r =[]
+    for i in range(len(lots2)):
+        for j in range(i+1,len(lots2)):
+            if is_same(lots2[i],lots2[j]):
+                r.append(j)
+
+    r= list(dict.fromkeys(r))
+    for i in range(len(r)):
+        del lots[len(r)-i]
+    return lots
+            
 def analiser_tout_voisins(graph,A):
     lots_A=[]
     for i in range(graph.size):
         if (graph.matrice[A][i]!=INF):
             lots_A.append(return_lot(graph,A,i))
     return lots_A
-    
 
 def analiser_la_figure(graph):
     lots_all=[]
     for i in range(graph.size):
-        lots_all.append(analiser_tout_voisins(graph,i))
+        lots_all=lots_all+(analiser_tout_voisins(graph,i))
+    enlever_doublons(lots_all)
     return lots_all
 
 def main():
-    global Graph
+    global graph
     global geometrique
     
     geometrique =[]
@@ -225,6 +271,7 @@ def main():
     graph=Graph(len(nodes),nodes)      
     link_sommet(geometrique[0],graph)
     graph.rename_ordre()
-    graph.print_matrice()
-    mes_longueurs,mes_predecesseurs = dijkstra(graph,0,1)
+
+    
+    
 main()
