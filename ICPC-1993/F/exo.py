@@ -75,7 +75,6 @@ class Puzzle:
         else :
             for i in range(0,5) :
                 print("  "+self.tab[i][0]+" "+self.tab[i][1]+" "+self.tab[i][2]+" "+self.tab[i][3]+" "+self.tab[i][4])
-        print()
         pass
 
 ### Fonctions lecture de fichier
@@ -117,6 +116,7 @@ while(tabpuz != None):
     tabpuz = readPuzzle( mon_fichier )
 
 ### Fermeture du fichier
+print()
 mon_fichier.close()
 
     
