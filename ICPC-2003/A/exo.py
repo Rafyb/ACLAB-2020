@@ -6,11 +6,30 @@ class Building:
         self.id = Building.objets_crees
         self.x = x
         self.y = y
+        self.liee = []
         Building.objets_crees += 1
 
     def est_voisin(self,other):
         if( (self.x == other.x and (self.y == other.y+1 or self.y == other.y-1) ) or (self.y == other.y and (self.x == other.x+1 or self.x == other.x-1))):
             return True
+        return False
+    
+    def setMarked(self,num):
+        self.numile = num
+
+    def getMarked(self,num):
+        return self.numile
+
+    def setPont(self, num):
+        self.liee.append(num)
+
+    def estLiee(self, num):
+        if(num in self.liee):
+            return True
+        else :
+            for ile in self.liee:
+                if(ile.estLiee(num)):
+                    return True
         return False
 
 class City:
@@ -36,45 +55,56 @@ class City:
         for i in range(0,nbblock):
             tab = []
             for j in range(0,nbblock):
-                tab.append(0)
+                tab.append(self.distanceEntre(self.sommets[i],self.sommets[j]))
             self.graphe.append(tab)
-        ## Ajout des arcs
-        # 0 => il n'y a aucun lien entre ces 2 parties
+    
+    def distanceEntre(self,sommet1,sommet2):
+        # 0 => il n'y a aucun lien possible entre ces 2 parties
         # -1 => les 2 parties sont adjacentes
-        # >0 => la longueur du pont entre les 2 parties 
-        parcoursS = self.sommets.copy()
-        idxG = 0
-        currentP = parcoursS.pop(0)
-        while(len(parcoursS) > 0):
-            for i in range(0,len(parcoursS)):
-                if(currentP.est_voisin(parcoursS[i])):
-                    self.graphe[idxG+(i+1)][idxG] = -1
-            # On passe au sommet suivant
-            currentP = parcoursS.pop(0)
-            idxG+=1
+        # >0 => la distance entre les 2
+        distance = 0
+        if(sommet1 == sommet2):
+            return distance
+        if(sommet1.est_voisin(sommet2)):
+            distance = -1
+        else :
+            if(sommet1.y == sommet2.y or sommet1.y == sommet2.y+1 or sommet1.y == sommet2.y-1):
+                if(sommet1.x > sommet2.x):
+                    distance = abs(sommet1.x - sommet2.x -1)
+                else :
+                    distance = abs(sommet2.x - sommet1.x -1)
+            elif(sommet1.x == sommet2.x or sommet1.x == sommet2.x+1 or sommet1.x == sommet2.x-1):
+                if(sommet1.y > sommet2.y):
+                    distance = abs(sommet1.y - sommet2.y -1)
+                else :
+                    distance = abs(sommet2.y - sommet1.y -1)
+        return distance
   
-    def parcours(self,pile,parcouru):
-        currentS = pile.pop(0)
-        parcouru.append(currentS)
+    def parcours(self,currentS,pile,num):
+        parcouru = []
+        currentS.setMarked(num)
         for idx in range(0,len(pile)):
             if(pile[idx].est_voisin(currentS)):
                 parcouru.append(pile[idx])
-        
+        for build in parcouru:
+            pile.pop(pile.index(build))
+            self.parcours(build,pile,num)
         pass
 
     def nb_iles(self):
         pile = self.sommets.copy()
-        parcouru = []
         nb = 0
         while(len(pile)>0):
-            self.parcours(pile,parcouru)
+            currentS = pile.pop(0)
+            self.parcours(currentS,pile,nb)
             nb+=1
-
         return nb
 
-    def nb_ponts(self):
+
+    def nb_ponts(self,nb_ile):
         length = 0
         nb = 0 
+
         return nb, length 
 
     def afficherMatrice(self):
@@ -82,14 +112,24 @@ class City:
             print(ligne)
 
     def afficher(self):
-        nb_ile = self.nb_iles()
-        nb_pont = self.nb_ponts()[0]
         print(self.name)
+        # On calcul le nombre d'iles séparées
+        nb_ile = self.nb_iles()
+        nb_pont = 0
+        # Si il y a plus d'une ile on calcul le nombre de pont utile
+        if(nb_ile > 1):
+            nb_pont = self.nb_ponts(nb_ile)[0]
+        else :
+            print("No bridges are needed.")
+        if(nb_pont == 0 and nb_ile > 1):
+            print("No bridges are possible.")
+            print(str(nb_ile)+" disconnected groups")
+        
+        # Debug
         print("Matrice :")
         self.afficherMatrice()
+        print("Nb d'ile : "+str(nb_ile)) 
         
-        if( nb_pont == 0 and  nb_ile == 0 ):
-            print("No bridges are needed.")
         print()
         pass
 
@@ -113,5 +153,6 @@ while( width > 0 and width < 50 and height > 0 and width < 50):
     height = int(ligne[0])
     width = int(ligne[1])
 
+print("PAS FINI\n")
 ### Fermeture du fichier
 mon_fichier.close()
