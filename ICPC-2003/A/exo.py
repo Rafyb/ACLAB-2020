@@ -20,16 +20,18 @@ class Building:
     def getMarked(self,num):
         return self.numile
 
-    def setPont(self, num):
-        self.liee.append(num)
+    def setPont(self, ile):
+        self.liee.append(ile)
+        ile.liee.append(self)
 
-    def estLiee(self, num):
-        if(num in self.liee):
+    def estLiee(self, ile, parent):
+        if(ile in self.liee):
             return True
         else :
-            for ile in self.liee:
-                if(ile.estLiee(num)):
-                    return True
+            for otherile in self.liee:
+                if(otherile != parent):
+                    if(otherile.estLiee(ile,self)):
+                        return True
         return False
 
 class City:
@@ -100,11 +102,19 @@ class City:
             nb+=1
         return nb
 
-
     def nb_ponts(self,nb_ile):
         length = 0
         nb = 0 
-
+        for valmax in range(1,self.width):
+            for col in range(0,len(self.graphe)):
+                for row in range(0,len(self.graphe[0])):
+                    if(self.graphe[col][row] == valmax):
+                        if(self.sommets[col].estLiee(self.sommets[row],self.sommets[col])):
+                            self.graphe[col][row] = 0
+                        else:
+                            self.sommets[col].setPont(self.sommets[row])
+                            nb+=1
+                            length+=valmax
         return nb, length 
 
     def afficherMatrice(self):
@@ -118,18 +128,24 @@ class City:
         nb_pont = 0
         # Si il y a plus d'une ile on calcul le nombre de pont utile
         if(nb_ile > 1):
-            nb_pont = self.nb_ponts(nb_ile)[0]
+            ponts = self.nb_ponts(nb_ile)
+            nb_pont = ponts[0]
+            length = ponts[1]
+            if(nb_pont == 0 and nb_ile > 1):
+                print("No bridges are possible.")
+            else:
+                print(str(nb_pont)+" bridges of total length "+str(length))
+            if(nb_ile - nb_pont > 1):
+                print(str(nb_ile - nb_pont)+" disconnected groups")
         else :
             print("No bridges are needed.")
-        if(nb_pont == 0 and nb_ile > 1):
-            print("No bridges are possible.")
-            print(str(nb_ile)+" disconnected groups")
         
         # Debug
+        '''
         print("Matrice :")
         self.afficherMatrice()
         print("Nb d'ile : "+str(nb_ile)) 
-        
+        '''
         print()
         pass
 
@@ -153,6 +169,5 @@ while( width > 0 and width < 50 and height > 0 and width < 50):
     height = int(ligne[0])
     width = int(ligne[1])
 
-print("PAS FINI\n")
 ### Fermeture du fichier
 mon_fichier.close()
