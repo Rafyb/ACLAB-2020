@@ -27,6 +27,8 @@ def numberToWord(number):
 def uncompress(fichier):
     texteLu = ''
     for mot in fichier.read().split(' '):
+        if(mot.replace('\n','')=='0'):
+            break
         # Gestion des carateres de séparation
         if(mot.find('-') != -1 or mot.find("'") != -1):
             if(mot.find("'") != -1) :
@@ -42,6 +44,8 @@ def uncompress(fichier):
             if(motsDouble[1] != ''):
                 texteLu = texteLu + gestionMot(motsDouble[0]) + separation
                 mot = motsDouble[1]
+                if(mot.replace('\n','')=='0'):
+                    break
             else :
                 texteLu = texteLu + gestionMot(motsDouble[0]) + separation
                 mot = ''
