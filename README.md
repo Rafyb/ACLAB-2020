@@ -2,6 +2,23 @@
 
 Les sujets : https://icpc.baylor.edu/worldfinals/problems
 
+## Groupe et tâches réalisées
+
+* Julien Meunier 
+  - [x] 1993 A
+  - [x] 1995 A
+
+* Raphael Bauvin
+  - [x] 1993 F
+  - [x] 2003 A
+  - [x] 1995 H
+
+* Zacharie Poissonnier
+  - [] 1993 B
+
+
+---
+
 ## Sprint 1
 
 Du 02/03/2020 au 19/03/2020
