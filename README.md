@@ -6,7 +6,7 @@ Les sujets : https://icpc.baylor.edu/worldfinals/problems
 
 * Julien Meunier 
   - [x] 1993 A
-  - [x] 1995 A
+  - [x] 1995 E
 
 * Raphael Bauvin
   - [x] 1993 F
