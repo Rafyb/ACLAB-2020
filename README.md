@@ -37,18 +37,3 @@ Ce premier sprint a été assez compliqué. Nous avons pris connaissance de la p
 
 
 ---
-
-## Sprint 2
-
-Du 19/03/2020 au 31/03/2020
-
-Backlog de début de sprint :
-
-![alt text](https://raw.githubusercontent.com/Rafyb/ACLAB-2020/master/screen_backlogs/sprint2_debut.png "Sprint 2")
-
-Backlog de fin de sprint :
-
-
-Bilan :<br>
-
----
