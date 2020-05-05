@@ -25,15 +25,6 @@ def main():
                     debut = tmp + 2
                     fin = i + 2
                     
-            rep = add
             
-        i += 1
-        route += 1
-        
-        if rep > 0:
-            print("The nicest part of route {} is between stops {} and {}".format(route, debut, fin))
-        else:
-            print("Route {} has no nice parts".format(route))
-        test -= 1
 
 main()
