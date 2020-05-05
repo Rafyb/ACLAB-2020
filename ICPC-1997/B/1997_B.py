@@ -26,5 +26,4 @@ def main():
                     fin = i + 2
                     
             
-
 main()
