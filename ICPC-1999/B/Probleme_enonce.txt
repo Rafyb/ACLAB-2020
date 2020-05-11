@@ -1,0 +1,4 @@
+Malgre le dernier resultat qui n'est pas egal a 0
+celui ci est normal vu que en effet le tir touche bien un des cubes
+l'enonce c'est sans doute tromper en inversant le nombre de divisions avec celui de la longueur du cube, 
+ce qui explique pourquoi le tir ne touche dans l'excercice mais touche dans le programme.
