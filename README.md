@@ -16,7 +16,7 @@ Les sujets : https://icpc.baylor.edu/worldfinals/problems
 
 * Zacharie Poissonnier
   - [ ] 1993 B
-  - [ ] 1999 C
+  - [x] 1999 B
 
 
 ---
