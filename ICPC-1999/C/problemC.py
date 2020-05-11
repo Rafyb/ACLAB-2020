@@ -52,12 +52,12 @@ def is_secante(objet_feu,plan,plan_coord):
 #retourne le lambda tel que le point alpha appartiennent au plan donnée
 #plan est un entier entre 0 et 2 (0=x;1=y,2=z)
 def lambda_plane(abc,xyz,plan,plan_coord):
-    if (plan>0 and plan<2):
+    if (plan>=0 and plan<=2):
         if(abc[plan]!=plan_coord):
             return (plan_coord-abc[plan])/xyz[plan]
         else:
             return 0
-    return-1
+    return -1
 
 #retourne un booléen determinant si le point donnée se trouve dans un cube
 def point_in_cube(point,coor_min,coor_max):
@@ -67,11 +67,10 @@ def point_in_cube(point,coor_min,coor_max):
     return False
 
 def test_mini_cube(objet_feu,coor_min,coor_max):
-    i=0 #num de la face
     j=0 #0= face min, 1=face max
-    k=0 #x,y,z ( z n'est présent qu'une fois vu que la face haute n'a pas d'interaction avec l'eau qui tombe )
+    k=0 #x,y,z
     table_point=[]
-    while (k<3 or len(table_point)==2):
+    while (k<3 and len(table_point)!=2):
         for j in range(2):
             if(j):
                 new_point = is_secante(objet_feu,k,coor_min[k])
@@ -80,12 +79,35 @@ def test_mini_cube(objet_feu,coor_min,coor_max):
                 
             if(new_point!=0 and new_point!=-1):
                 if(point_in_cube(new_point,coor_min,coor_max)):
-                   table_point.append(new_point)
-                   print("doot")
+                    table_point.append(new_point)
         k+=1
-        
-    return list(dict.fromkeys(table_point))
+    return table_point
+
+#probleme se trouve la, lorsque l'on monte d'un étage
+#retourne le volume d'eau perdu du mini_cube
+def loss_water(objet_feu,coor_min,coor_max):
+    length= objet_feu.longueur/objet_feu.division
+    volume=pow(length,3)
     
+    point_touche=test_mini_cube(objet_feu,coor_min,coor_max)
+    mini=length
+    if(point_touche):
+        for i in range(len(point_touche)):
+            if ((point_touche[i][2]-coor_min[2])<mini):
+                mini=point_touche[i][2]-coor_min[2]
+    
+    return ((length-mini)/length)*volume
+
+#permet de verifier combien d'eau totale tombe dans le récipient en bas
+def tir_session(objet_feu):
+    nombre_cube=objet_feu.division
+    length= objet_feu.longueur/objet_feu.division
+    eau_perdu=0
+    for x in range(nombre_cube):
+        for y in range(nombre_cube):
+            for z in range(nombre_cube):
+                eau_perdu += loss_water(objet_feu,[x*length,y*length,z*length],[(x+1)*length,(y+1)*length,(z+1)*length])
+    return eau_perdu
     
 def readFile():
     fread = open("bullet.in","r")
@@ -105,6 +127,7 @@ def main():
     readFile()
     session[0].param()
     print(session[0].line())
-
-    print(test_mini_cube(session[0],[0,15,0],[5,20,5]))
+    print()
+    for i in range (len(session)):
+        print(tir_session(session[i]))
 main()
