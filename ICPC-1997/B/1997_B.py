@@ -25,5 +25,10 @@ def main():
                     debut = tmp + 2
                     fin = i + 2
                     
+            rep = add
             
+        i += 1
+        route += 1
+        
+
 main()
