@@ -15,20 +15,16 @@ def main():
         for i in range(j-1):
             x = int(input('note de la route: '))
             add += x
-            
-            if add < 0:
-                add = 0
-                tmp = i
                 
-            if add >= rep:
-                if add > rep or (add == rep and (i - tmp > fin - debut)):
-                    debut = tmp + 2
-                    fin = i + 2
+##            if add >= rep:
+##                if add > rep or (add == rep and (i - tmp > fin - debut)):
+##                    debut = tmp + 2
+##                    fin = i + 2
                     
-            rep = add
+##            rep = add
             
-        i += 1
-        route += 1
+##        i += 1
+##        route += 1
         
 
 main()
