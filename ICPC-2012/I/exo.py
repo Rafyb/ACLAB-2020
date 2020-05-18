@@ -120,6 +120,8 @@ class Verrou:
         if(self.parcoursLaser()):
             print(self.name+': 0')
             return
+        if(self.name == "Cas 1"):
+            self.affichage()
         miroir = self.parcoursInverse()
         if(miroir[0] != -1):
             self.insererMiroir(miroir[0],miroir[2],miroir[1])
